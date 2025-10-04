@@ -6,13 +6,8 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     // spotifyv2 butuh turnstile token → untuk sementara pakai V1 (tanpa token)
     // bila ingin V2, panggil solveBypass di route ini atau pakai V1 dulu
-    // contoh pakai solver (kalau kamu sudah punya)
-const bypass = await solveBypass();
-const token  = await bypass.solveTurnstileMin(
-  'https://spotimate.io/',
-  '0x4AAAAAAA_b5m4iQN755mZw'
-);
-    const result = await spotify(body.url, token);
+    // contoh pakai solver (kalau kamu sudah puny
+    const result = await spotify(body.url, '');
     if (!result) throw new Error("Failed");
     return Response.json({ status: true, data: result });
   } catch (e: any) {
