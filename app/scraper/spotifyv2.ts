@@ -4,7 +4,8 @@ import * as cheerio from "cheerio";
 export default async function scrapeSpotify(url: string, turnstileToken: string) {
   const home = await axios.get("https://spotimate.io/");
   const $ = cheerio.load(home.data);
-  const tokenInput = $("input[type='hidden']").filter((i, el) => $(el).attr("name")?.startsWith("_"));
+  const tokenInput = $("input[type='hidden']").filter((i, el) =>
+  !!$(el).attr("name")?.startsWith("_"));
   const tokenName = tokenInput.attr("name")!;
   const tokenValue = tokenInput.val()!;
 
