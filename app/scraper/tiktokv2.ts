@@ -52,10 +52,11 @@ class TikTokScraper {
     const verify = $("#submit-form input[type=hidden]").eq(1).val()!;
 
     const payload = new URLSearchParams({
-      [url_name]: URL,
-      [token_name]: token_value,
-      verify,
-    });
+  [url_name]: URL,
+  [token_name]: String(token_value),
+  verify: String(verify),
+});
+
 
     const res = await axios.post("https://musicaldown.com/download", payload, {
       headers: {
