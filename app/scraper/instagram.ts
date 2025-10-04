@@ -15,10 +15,11 @@ function transformResponse(apiResponse: any) {
 async function tryFastdl(url: string) {
   const executablePath = await chromium.executablePath();
   const browser = await puppeteer.launch({
-    args: chromium.args,
-    executablePath,
-    headless: chromium.headless,
-  });
+  args: chromium.args,
+  executablePath: await chromium.executablePath(),
+  headless: !!chromium.headless, // <-- fix disini
+});
+
 
   const page = await browser.newPage();
   return new Promise<any[]>(async (resolve, reject) => {
@@ -63,10 +64,11 @@ async function tryFastdl(url: string) {
 async function tryIgram(url: string) {
   const executablePath = await chromium.executablePath();
   const browser = await puppeteer.launch({
-    args: chromium.args,
-    executablePath,
-    headless: chromium.headless,
-  });
+  args: chromium.args,
+  executablePath: await chromium.executablePath(),
+  headless: !!chromium.headless, // <-- fix disini
+});
+
 
   const page = await browser.newPage();
   return new Promise<any[]>(async (resolve, reject) => {
