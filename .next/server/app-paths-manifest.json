@@ -1,0 +1,8 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/d/igdl/route": "app/api/d/igdl/route.js",
+  "/api/d/spotify/route": "app/api/d/spotify/route.js",
+  "/api/d/tiktok/route": "app/api/d/tiktok/route.js",
+  "/api/status/route": "app/api/status/route.js",
+  "/page": "app/page.js"
+}
