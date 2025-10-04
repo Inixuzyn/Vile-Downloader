@@ -1,26 +1,30 @@
-import puppeteer from "puppeteer-extra";
-import StealthPlugin from "puppeteer-extra-plugin-stealth";
-
-puppeteer.use(StealthPlugin());
+import chromium from '@sparticuz/chromium';
+import puppeteer from 'puppeteer-core';
 
 function transformResponse(apiResponse: any) {
   if (!apiResponse) return [];
   const items = Array.isArray(apiResponse) ? apiResponse : [apiResponse];
   return items
     .map((item) => ({
-      thumbnail: item.thumb || "",
-      url: (item.url && Array.isArray(item.url) && item.url[0]?.url) || "",
+      thumbnail: item.thumb || '',
+      url: (item.url && Array.isArray(item.url) && item.url[0]?.url) || '',
     }))
     .filter((item) => item.url);
 }
 
 async function tryFastdl(url: string) {
-  const browser = await puppeteer.launch({ headless: true, args: ["--no-sandbox"] });
+  const executablePath = await chromium.executablePath();
+  const browser = await puppeteer.launch({
+    args: chromium.args,
+    executablePath,
+    headless: chromium.headless,
+  });
+
   const page = await browser.newPage();
   return new Promise<any[]>(async (resolve, reject) => {
     let done = false;
-    page.on("response", async (res) => {
-      if (done || !res.url().includes("/api/convert")) return;
+    page.on('response', async (res) => {
+      if (done || !res.url().includes('/api/convert')) return;
       try {
         const data = await res.json();
         resolve(transformResponse(data));
@@ -31,27 +35,44 @@ async function tryFastdl(url: string) {
         reject(e);
       }
     });
+
     await page.setRequestInterception(true);
-    page.on("request", (req) => (["image", "stylesheet", "font"].includes(req.resourceType()) ? req.abort() : req.continue()));
-    await page.goto("https://fastdl.app/id", { waitUntil: "domcontentloaded" });
-    await page.type("#search-form-input", url);
-    await page.click(".search-form__button");
-    setTimeout(async () => {
-      if (!done) {
-        await browser.close();
-        reject(new Error("timeout"));
-      }
-    }, 30000);
+    page.on('request', (req) =>
+      ['image', 'stylesheet', 'font'].includes(req.resourceType())
+        ? req.abort()
+        : req.continue()
+    );
+
+    try {
+      await page.goto('https://fastdl.app/id', { waitUntil: 'domcontentloaded' });
+      await page.type('#search-form-input', url);
+      await page.click('.search-form__button');
+      setTimeout(async () => {
+        if (!done) {
+          await browser.close();
+          reject(new Error('timeout'));
+        }
+      }, 30000);
+    } catch (e) {
+      await browser.close();
+      reject(e);
+    }
   });
 }
 
 async function tryIgram(url: string) {
-  const browser = await puppeteer.launch({ headless: true, args: ["--no-sandbox"] });
+  const executablePath = await chromium.executablePath();
+  const browser = await puppeteer.launch({
+    args: chromium.args,
+    executablePath,
+    headless: chromium.headless,
+  });
+
   const page = await browser.newPage();
   return new Promise<any[]>(async (resolve, reject) => {
     let done = false;
-    page.on("response", async (res) => {
-      if (done || !res.url().includes("/api/convert")) return;
+    page.on('response', async (res) => {
+      if (done || !res.url().includes('/api/convert')) return;
       try {
         const data = await res.json();
         resolve(transformResponse(data));
@@ -62,17 +83,30 @@ async function tryIgram(url: string) {
         reject(e);
       }
     });
+
     await page.setRequestInterception(true);
-    page.on("request", (req) => (["image", "stylesheet", "font"].includes(req.resourceType()) ? req.abort() : req.continue()));
-    await page.goto("https://igram.world/id/", { waitUntil: "networkidle2" });
-    await page.type("#search-form-input", url);
-    await page.click(".search-form__button");
-    setTimeout(async () => {
-      if (!done) {
-        await browser.close();
-        reject(new Error("timeout"));
-      }
-    }, 30000);
+    page.on('request', (req) =>
+      ['image', 'stylesheet', 'font'].includes(req.resourceType())
+        ? req.abort()
+        : req.continue()
+    );
+
+    try {
+      await page.goto('https://igram.world/id/', { waitUntil: 'networkidle2' });
+      await page.waitForSelector('#search-form-input', { visible: true });
+      await page.type('#search-form-input', url);
+      await page.waitForSelector('.search-form__button', { visible: true });
+      await page.click('.search-form__button');
+      setTimeout(async () => {
+        if (!done) {
+          await browser.close();
+          reject(new Error('timeout'));
+        }
+      }, 30000);
+    } catch (e) {
+      await browser.close();
+      reject(e);
+    }
   });
 }
 
