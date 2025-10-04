@@ -1,6 +1,6 @@
 export const siteConfig = {
   name: "Vile Downloader",
-  url: "https://vile-downloader.vercel.app",
+  url: "https://vile-downloader1.vercel.app",
   github: "https://github.com/yourname/vile-downloader",
   engines: [
     { id: "tiktok", name: "TikTok", color: "bg-pink-600" },
