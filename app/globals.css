@@ -5,8 +5,14 @@
 html,
 body {
   scroll-behavior: smooth;
+  /* 3D gradient background */
+  background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+  color: #fff;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
+/* Glow animation */
 .glow {
   animation: glow 2s ease-in-out infinite alternate;
 }
@@ -16,6 +22,46 @@ body {
     text-shadow: 0 0 10px #fff, 0 0 20px #00f;
   }
   to {
-    text-shadow: 0 0 20px #fff, 0 0 40px #00f;
+    text-shadow: 0 0 20px #fff, 0 0 40px #00f, 0 0 50px #0ff;
+  }
+}
+
+/* Glass card */
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Neon button */
+.neon-btn {
+  @apply relative inline-flex items-center justify-center px-6 py-3 text-white font-semibold rounded-xl overflow-hidden;
+  background: linear-gradient(45deg, #6366f1, #a855f7);
+  box-shadow: 0 0 15px #6366f1, 0 0 30px #a855f7;
+  transition: all 0.3s ease;
+}
+.neon-btn:hover {
+  box-shadow: 0 0 25px #6366f1, 0 0 50px #a855f7;
+  transform: translateY(-2px);
+}
+
+/* Particle background (optional) */
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: #fff;
+  border-radius: 50%;
+  opacity: 0.6;
+  animation: float 15s infinite linear;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(100vh) scale(0);
+  }
+  100% {
+    transform: translateY(-10vh) scale(1.5);
   }
 }
